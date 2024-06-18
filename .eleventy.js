@@ -1,20 +1,6 @@
 const { DateTime } = require("luxon");
-// const pageHeading = require("./src/_includes/shortcodes/pageHeading");
 
 module.exports = function(eleventyConfig) {
-  //* PASSTHROUGH COPIES
-  // eleventyConfig.addPassthroughCopy("src/styles/app.css");
-  // eleventyConfig.addPassthroughCopy("src/assets/images");
-  // eleventyConfig.addPassthroughCopy({ "src/robots.txt": "/robots.txt" });
-
-  // eleventyConfig.addShortcode(
-  //   "headers",
-  //   (title, subtitle) =>
-  //     `<h1>${title}</h1>
-  //       <p>${subtitle}</p>`
-  // );
-
-  // eleventyConfig.addShortcode("pageHeading", pageHeading);
 
   eleventyConfig.addPassthroughCopy("./src/**/*/tailwind.css")
 
