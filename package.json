@@ -1,9 +1,9 @@
 {
-  "name": "opticaintervision",
+  "name": "templating-stack",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "npm-run-all -p dev:*",
+    "dev": "npm-run-all -p dev:*",
     "build": "run-s build:*",
     "dev:11ty": "eleventy --serve",
     "dev:css": "tailwindcss -i src/styles/app.css -o src/styles/tailwind.css --watch --postcss",
