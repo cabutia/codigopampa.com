@@ -1,0 +1,33 @@
+<div class="w-full flex flex-col gap-12">
+    <div class="w-full bg-white border rounded-lg">
+        <div class="w-full flex flex-col px-8 py-6 gap-6">
+            <div class="w-full flex gap-6">
+                {% set authorPicSize = 'size-20' %}
+                {% include "author-profile.njk" %}
+                <div class="flex flex-col">
+                    <h4 class="font-display text-2xl">Leandro Gomez</h4>
+                    <caption class="text-gray-600">Software Engineer</caption>
+                    <p class="mt-2 font-extralight">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia repellat accusamus itaque, veritatis magnam, eaque, possimus at beatae et tenetur optio necessitatibus in illum incidunt earum exercitationem autem corporis quisquam?
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full flex justify-center gap-4">
+        {% set class = 'size-6' %}
+        <div class="size-12 rounded-lg border flex-center text-gray-600 hover:text-[#e1306c] transition-colors cursor-pointer">
+            {% include "icons/instagram.njk" %}
+        </div>
+        <div class="size-12 rounded-lg border flex-center text-gray-600 hover:text-[#0a66c2] transition-colors cursor-pointer">
+            {% include "icons/linkedin.njk" %}
+        </div>
+        <div class="size-12 rounded-lg border flex-center text-gray-600 hover:text-[#ea4335] transition-colors cursor-pointer">
+            {% include "icons/envelope.njk" %}
+        </div>
+        <div class="size-12 rounded-lg border flex-center text-gray-600 hover:text-[#075e54] transition-colors cursor-pointer">
+            {% include "icons/whatsapp.njk" %}
+        </div>
+    </div>
+</div>

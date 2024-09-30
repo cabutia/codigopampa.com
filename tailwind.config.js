@@ -2,6 +2,7 @@
 module.exports = {
   content: ["./src/**/*.{njk,nj,md}"],
   presets: [],
+  mode: 'jit',
   darkMode: 'media', // or 'class'
   theme: {
     accentColor: ({ theme }) => ({
@@ -301,7 +302,11 @@ module.exports = {
       DEFAULT: '1',
     },
     fontFamily: {
+      display: [
+        '"Philosopher"'
+      ],
       sans: [
+        '"Muli"',
         'ui-sans-serif',
         'system-ui',
         'sans-serif',

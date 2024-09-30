@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "npm-run-all -p dev:*",
+    "dev": "rm -rf _site && npm-run-all -p dev:*",
     "build": "run-s build:*",
     "dev:11ty": "eleventy --serve",
-    "dev:css": "tailwindcss -i src/styles/app.css -o src/styles/tailwind.css --watch --postcss",
+    "dev:css": "tailwindcss -i src/styles/app.scss -o src/styles/tailwind.css --watch --postcss",
     "build:11ty": "eleventy",
-    "build:css": "tailwindcss -i src/assets/css/tailwind.css -o _site/assets/css/tailwind.css --postcss"
+    "build:css": "tailwindcss -i src/styles/app.scss -o _site/assets/css/tailwind.css --postcss"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +18,8 @@
     "luxon": "^3.4.4",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.38",
+    "postcss-scss": "^4.0.9",
+    "prettier-plugin-jinja-template": "^1.5.0",
     "sass": "^1.77.6",
     "tailwindcss": "^3.4.4"
   }
