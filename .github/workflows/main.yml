@@ -1,12 +1,9 @@
-name: Node.js Build
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # Trigger the workflow on push to the main branch
 
 jobs:
   build:
@@ -26,11 +23,10 @@ jobs:
 
       - name: Build project
         run: npm run build
-        
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site  # Adjust this path to your build output directory
           publish_branch: gh-pages  # The branch to deploy to (gh-pages is typical for GitHub Pages)
-
