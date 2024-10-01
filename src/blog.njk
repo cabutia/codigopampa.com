@@ -6,9 +6,7 @@ pagination:
     size: 3
     alias: posts
     reverse: true
-permalink: 
-  - "/blog"
-  - "/blog/page-{{ pagination.pageNumber + 1 }}/"
+permalink: "/blog/posts-{{ pagination.pageNumber + 1 }}/"
 ---
 
 <h1>Blog Posts</h1>
