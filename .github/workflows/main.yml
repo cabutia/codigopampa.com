@@ -37,14 +37,14 @@ jobs:
           delete: true
           quiet: false
 
-      - name: Upload to S3
-        uses: shallwefootball/s3-upload-action@master
-        with:
-          aws_key_id: ${{ secrets.AWS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_bucket: ${{ secrets.TF_VAR_S3_BUCKET }}
-          source_dir: '_site'
-          destination_dir: ''
+      # - name: Upload to S3
+      #   uses: shallwefootball/s3-upload-action@master
+      #   with:
+      #     aws_key_id: ${{ secrets.AWS_KEY_ID }}
+      #     aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws_bucket: ${{ secrets.TF_VAR_S3_BUCKET }}
+      #     source_dir: '_site'
+      #     destination_dir: ''
 
       - name: Invalidate Cloudfront cache
         uses: chetan/invalidate-cloudfront-action@v2
