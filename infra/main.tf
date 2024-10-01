@@ -22,19 +22,20 @@ resource "aws_s3_bucket_policy" "s3_public_policy" {
   policy = data.aws_iam_policy_document.s3_allow_public_access.json
 }
 
+# Policy
 data "aws_iam_policy_document" "s3_allow_public_access" {
-    statement {
-      principals {
-        type = "AWS"
-        identifiers = ["*"]
-      }
-
-      actions = ["s3:GetObject"]
-      resources = [
-        aws_s3_bucket.site.arn,
-        "${aws_s3_bucket.site.arn}/*"
-      ]
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
     }
+
+    actions = ["s3:GetObject"]
+    resources = [
+      aws_s3_bucket.site.arn,
+      "${aws_s3_bucket.site.arn}/*"
+    ]
+  }
 }
 
 # S3 website
@@ -80,12 +81,19 @@ resource "aws_s3_bucket_acl" "s3_acl" {
 # CloudFront Distribution
 resource "aws_cloudfront_distribution" "cdn" {
   origin {
-    domain_name = aws_s3_bucket.site.bucket_regional_domain_name
-    origin_id   = "S3-${aws_s3_bucket.site.id}"
+    domain_name = aws_s3_bucket_website_configuration.s3_site.website_endpoint
+    origin_id   = "origin-${aws_s3_bucket_website_configuration.s3_site.website_endpoint}"
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2", "SSLv3"]
     }
+
+    # s3_origin_config {
+    #   origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
+    # }
   }
 
   enabled             = true
@@ -95,7 +103,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-${aws_s3_bucket.site.id}"
+    target_origin_id = "origin-${aws_s3_bucket_website_configuration.s3_site.website_endpoint}"
 
     forwarded_values {
       query_string = false
