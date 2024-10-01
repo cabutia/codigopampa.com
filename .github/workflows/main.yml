@@ -36,7 +36,7 @@ jobs:
       - name: Invalidate Cloudfront cache
         uses: chetan/invalidate-cloudfront-action@v2
         env:
-          PATHS_FROM: .updated_files
+          PATHS: '/'
           AWS_REGION: 'sa-east-1'
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_ID }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
