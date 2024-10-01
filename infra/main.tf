@@ -2,12 +2,55 @@ provider "aws" {
   region = "sa-east-1" # Adjust based on your region
 }
 
+provider "aws" {
+  alias  = "acm"
+  region = "us-east-1"
+}
+
 terraform {
   backend "s3" {
     bucket = "codigopampa-tf-backend" # S3 bucket for the Terraform state
     key    = "terraform.tfstate"
     region = "sa-east-1" # Adjust based on your region
   }
+}
+
+resource "aws_acm_certificate" "cert" {
+  provider                  = aws.acm
+  domain_name               = var.route53_domain
+  subject_alternative_names = ["*.${var.route53_domain}"]
+  validation_method         = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "validation_record" {
+  depends_on = [ aws_acm_certificate.cert ]
+  zone_id = var.route53_zone_id
+
+  for_each = {
+    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name    = each.value.name
+  type    = each.value.type
+  records = [each.value.record]
+  ttl     = "300"
+}
+
+resource "aws_acm_certificate_validation" "cert_validation" {
+  depends_on = [ aws_acm_certificate.cert ]
+  provider = aws.acm
+
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = [for record in aws_route53_record.validation_record : record.fqdn]
 }
 
 # S3 Bucket to hold the website
@@ -80,6 +123,8 @@ resource "aws_s3_bucket_acl" "s3_acl" {
 
 # CloudFront Distribution
 resource "aws_cloudfront_distribution" "cdn" {
+  depends_on = [aws_acm_certificate.cert]
+
   origin {
     domain_name = aws_s3_bucket_website_configuration.s3_site.website_endpoint
     origin_id   = "origin-${aws_s3_bucket_website_configuration.s3_site.website_endpoint}"
@@ -99,6 +144,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
+  aliases             = ["codigopampa.com", "*.codigopampa.com"]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
@@ -126,7 +172,8 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = aws_acm_certificate.cert.arn
+    ssl_support_method = "sni-only"
   }
 }
 
