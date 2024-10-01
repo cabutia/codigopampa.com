@@ -1,0 +1,36 @@
+---
+layout: base
+title: Entries
+pagination:
+    data: collections.posts
+    size: 3
+    alias: posts
+    reverse: true
+permalink: "/blog/page-{{ pagination.pageNumber + 1 }}"
+---
+
+<h1>Blog Posts</h1>
+
+<ul>
+  {% for post in pagination.items %}
+    <li>
+      <a href="{{ post.url }}">{{ post.data.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
+<nav>
+  {% if pagination.href.previous %}
+    <a href="{{ pagination.href.previous }}">Previous</a>
+  {% endif %}
+  
+  {% for page in pagination.pages %}
+    <a href="/blog/posts/page-{{ loop.index }}">
+      {{ loop.index }}
+    </a>
+  {% endfor %}
+
+  {% if pagination.href.next %}
+    <a href="{{ pagination.href.next }}">Next</a>
+  {% endif %}
+</nav>

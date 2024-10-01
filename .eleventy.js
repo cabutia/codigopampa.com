@@ -62,6 +62,10 @@ module.exports = function (eleventyConfig) {
     }`;
   });
 
+  eleventyConfig.addCollection('posts', (collectionApi) => {
+    return collectionApi.getFilteredByGlob('src//blog/*.md').reverse()
+  })
+
   return {
     dir: {
       input: "src",
