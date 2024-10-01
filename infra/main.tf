@@ -121,9 +121,16 @@ resource "aws_s3_bucket_acl" "s3_acl" {
   acl    = "public-read"
 }
 
+resource "aws_cloudfront_function" "rewrite_function" {
+  runtime = "cloudfront-js-2.0"
+  name = "uri-rewrite"
+  publish = true
+  code = file("${path.module}/cf-function.js")
+}
+
 # CloudFront Distribution
 resource "aws_cloudfront_distribution" "cdn" {
-  depends_on = [aws_acm_certificate.cert]
+  depends_on = [aws_acm_certificate.cert, aws_cloudfront_function.rewrite_function]
 
   origin {
     domain_name = aws_s3_bucket_website_configuration.s3_site.website_endpoint
@@ -162,6 +169,11 @@ resource "aws_cloudfront_distribution" "cdn" {
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
+
+    function_association {
+      event_type = "viewer-request"
+      function_arn = aws_cloudfront_function.rewrite_function.arn
+    }
   }
 
   price_class = "PriceClass_100"
