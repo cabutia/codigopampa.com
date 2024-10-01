@@ -13,10 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js 18
+      - name: Set up Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
@@ -32,3 +32,12 @@ jobs:
           aws_bucket: ${{ secrets.TF_VAR_S3_BUCKET }}
           source_dir: '_site'
           destination_dir: ''
+
+      - name: Invalidate Cloudfront cache
+        uses: chetan/invalidate-cloudfront-action@v2
+        env:
+          PATHS_FROM: .updated_files
+          AWS_REGION: 'sa-east-1'
+          DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
