@@ -24,6 +24,19 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Sync with S3
+        uses: sai-sharan/aws-s3-sync-action@master
+        with:
+          access_key: ${{ secrets.AWS_KEY_ID }}
+          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: 'sa-east-1'
+          source: '_site'
+          destination_bucket: ${{ secrets.TF_VAR_S3_BUCKET }}
+          destination_prefix: ''
+          exclude: '.git/*'
+          delete: true
+          quiet: false
+
       - name: Upload to S3
         uses: shallwefootball/s3-upload-action@master
         with:
